@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Project</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #111;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 400px;
+    z-index: 2;
+}
+
+h1 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+}
+
+input, button {
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    margin-top: 12px;
+}
+
+button {
+    background: #444;
+    color: white;
+    cursor: pointer;
+}
+
+.error {
+    margin-top: 10px;
+    color: #ff9a9a;
+}
+
+/* Valentine styles load AFTER password */
+.valentine {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+}
+
+.hearts {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    animation: float 2s infinite alternate;
+}
+
+@keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+}
+
+.yes {
+    background: #ff4d6d;
+}
+
+.no {
+    background: #555;
+    position: absolute;
+}
+
+.black {
+    background: black;
+}
+
+/* Confetti */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+</style>
+</head>
+
+<body>
+<canvas id="confetti"></canvas>
+<div id="app" class="container"></div>
+
+<script>
+const PASSWORD = "unlockme"; // 🔐 CHANGE THIS
+const app = document.getElementById("app");
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+/* Password Screen */
+function passwordScreen() {
+    app.innerHTML = `
+        <h1>Restricted Access</h1>
+        <input type="password" id="pwd" placeholder="Enter password">
+        <button onclick="checkPassword()">Enter</button>
+        <div id="err" class="error"></div>
+    `;
+}
+
+function checkPassword() {
+    const val = document.getElementById("pwd").value;
+    if (val !== PASSWORD) {
+        document.getElementById("err").innerText = "Access denied";
+    } else {
+        document.body.classList.add("valentine");
+        landingPage();
+    }
+}
+
+/* Confetti */
+function launchConfetti() {
+    const pieces = [];
+    const colors = ["#ff4d6d", "#ffd166", "#6a4cff", "#4d96ff"];
+
+    for (let i = 0; i < 100; i++) {
+        pieces.push({
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            size: Math.random() * 6 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            vx: (Math.random() - 0.5) * 10,
+            vy: Math.random() * -12,
+            g: 0.3
+        });
+    }
+
+    function animate() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        pieces.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.g;
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+        });
+        if (pieces.some(p => p.y < canvas.height)) {
+            requestAnimationFrame(animate);
+        }
+    }
+    animate();
+}
+
+/* Valentine Flow */
+function landingPage() {
+    app.innerHTML = `
+        <div class="hearts">❤️ 💕 ❤️</div>
+        <h1>Will you be my Valentine?</h1>
+        <button class="yes" onclick="goodChoice()">Yes</button>
+        <button class="no" id="noBtn">No</button>
+    `;
+
+    const noBtn = document.getElementById("noBtn");
+    function move() {
+        noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+        noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+    }
+    noBtn.addEventListener("mouseenter", move);
+    document.addEventListener("touchstart", move);
+}
+
+function goodChoice() {
+    launchConfetti();
+    app.innerHTML = `<h1>yayyyy good choice</h1>`;
+
+    setTimeout(() => {
+        document.body.classList.add("black");
+        app.innerHTML = `<h1>but its not over yet</h1>`;
+    }, 3000);
+
+    setTimeout(readyPage, 6000);
+}
+
+function readyPage() {
+    document.body.classList.remove("black");
+    app.innerHTML = `
+        <h1>u ready to be a good girl ?</h1>
+        <button class="yes" onclick="launchConfetti(); begPage()">Yes</button>
+    `;
+}
+
+function begPage() {
+    app.innerHTML = `
+        <h1>beg for it...</h1>
+        <input id="ans" placeholder="Type here">
+        <button class="yes" onclick="checkAns()">Submit</button>
+        <div id="msg" class="error"></div>
+    `;
+}
+
+function checkAns() {
+    const t = document.getElementById("ans").value.toLowerCase();
+    if (!t.split(/\s+/).includes("please")) {
+        document.getElementById("msg").innerText = "not the right answer";
+    } else {
+        finalPage();
+    }
+}
+
+function finalPage() {
+    launchConfetti();
+    app.innerHTML = `
+        <div class="hearts">❤️ 💕 ❤️</div>
+        <h1>You are mine now</h1>
+    `;
+}
+
+/* Start */
+passwordScreen();
+</script>
+</body>
+</html>
