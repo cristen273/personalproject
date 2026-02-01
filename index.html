@@ -52,7 +52,7 @@ button {
     color: #ff9a9a;
 }
 
-/* Valentine styles load AFTER password */
+/* Valentine theme (applied after password) */
 .valentine {
     font-family: 'Comic Sans MS', cursive, sans-serif;
     background: linear-gradient(135deg, #ff9a9e, #fad0c4);
@@ -73,16 +73,19 @@ button {
     background: #ff4d6d;
 }
 
+/* NO button – fixed size */
 .no {
     background: #555;
     position: absolute;
+    width: 120px;
+    height: 45px;
 }
 
 .black {
     background: black;
 }
 
-/* Confetti */
+/* Confetti canvas */
 canvas {
     position: fixed;
     top: 0;
@@ -98,7 +101,9 @@ canvas {
 <div id="app" class="container"></div>
 
 <script>
-const PASSWORD = "slut"; // 🔐 CHANGE THIS
+/* 🔐 PASSWORD */
+const PASSWORD = "slut";
+
 const app = document.getElementById("app");
 const canvas = document.getElementById("confetti");
 const ctx = canvas.getContext("2d");
@@ -106,7 +111,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-/* Password Screen */
+/* PASSWORD SCREEN */
 function passwordScreen() {
     app.innerHTML = `
         <h1>Restricted Access</h1>
@@ -126,7 +131,7 @@ function checkPassword() {
     }
 }
 
-/* Confetti */
+/* 🎊 CONFETTI */
 function launchConfetti() {
     const pieces = [];
     const colors = ["#ff4d6d", "#ffd166", "#6a4cff", "#4d96ff"];
@@ -159,7 +164,7 @@ function launchConfetti() {
     animate();
 }
 
-/* Valentine Flow */
+/* PAGES */
 function landingPage() {
     app.innerHTML = `
         <div class="hearts">❤️ 💕 ❤️</div>
@@ -169,12 +174,16 @@ function landingPage() {
     `;
 
     const noBtn = document.getElementById("noBtn");
-    function move() {
-        noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
-        noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+
+    function moveBtn() {
+        noBtn.style.left =
+            Math.random() * (window.innerWidth - 140) + "px";
+        noBtn.style.top =
+            Math.random() * (window.innerHeight - 70) + "px";
     }
-    noBtn.addEventListener("mouseenter", move);
-    document.addEventListener("touchstart", move);
+
+    noBtn.addEventListener("mouseenter", moveBtn);
+    document.addEventListener("touchstart", moveBtn);
 }
 
 function goodChoice() {
@@ -184,9 +193,9 @@ function goodChoice() {
     setTimeout(() => {
         document.body.classList.add("black");
         app.innerHTML = `<h1>but its not over yet</h1>`;
-    }, 3000);
+    }, 2000);
 
-    setTimeout(readyPage, 6000);
+    setTimeout(readyPage, 4000);
 }
 
 function readyPage() {
@@ -209,7 +218,8 @@ function begPage() {
 function checkAns() {
     const t = document.getElementById("ans").value.toLowerCase();
     if (!t.split(/\s+/).includes("please")) {
-        document.getElementById("msg").innerText = "not the right answer";
+        document.getElementById("msg").innerText =
+            "not the right answer";
     } else {
         finalPage();
     }
@@ -223,7 +233,7 @@ function finalPage() {
     `;
 }
 
-/* Start */
+/* START */
 passwordScreen();
 </script>
 </body>
