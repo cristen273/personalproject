@@ -23,7 +23,7 @@ body {
 
 .container {
     width: 90%;
-    max-width: 400px;
+    max-width: 380px;
     z-index: 2;
 }
 
@@ -33,12 +33,14 @@ h1 {
 }
 
 input, button {
-    width: 100%;
-    padding: 14px;
+    width: 70%;
+    max-width: 220px;
+    padding: 12px;
     font-size: 1rem;
-    border-radius: 10px;
+    border-radius: 25px;
     border: none;
-    margin-top: 12px;
+    margin: 10px auto;
+    display: block;
 }
 
 button {
@@ -52,14 +54,14 @@ button {
     color: #ff9a9a;
 }
 
-/* Valentine theme (applied after password) */
+/* Valentine theme */
 .valentine {
     font-family: 'Comic Sans MS', cursive, sans-serif;
     background: linear-gradient(135deg, #ff9a9e, #fad0c4);
 }
 
 .hearts {
-    font-size: 3rem;
+    font-size: 2.8rem;
     margin-bottom: 20px;
     animation: float 2s infinite alternate;
 }
@@ -73,12 +75,13 @@ button {
     background: #ff4d6d;
 }
 
-/* NO button – fixed size */
+/* NO button – fixed & visible */
 .no {
     background: #555;
     position: absolute;
-    width: 120px;
-    height: 45px;
+    width: 100px;
+    height: 40px;
+    font-size: 0.9rem;
 }
 
 .black {
@@ -175,11 +178,16 @@ function landingPage() {
 
     const noBtn = document.getElementById("noBtn");
 
+    /* Initial visible position */
+    noBtn.style.left = "55%";
+    noBtn.style.top = "65%";
+
     function moveBtn() {
-        noBtn.style.left =
-            Math.random() * (window.innerWidth - 140) + "px";
-        noBtn.style.top =
-            Math.random() * (window.innerHeight - 70) + "px";
+        const maxX = window.innerWidth - 120;
+        const maxY = window.innerHeight - 80;
+
+        noBtn.style.left = Math.random() * maxX + "px";
+        noBtn.style.top = Math.random() * maxY + "px";
     }
 
     noBtn.addEventListener("mouseenter", moveBtn);
@@ -218,8 +226,7 @@ function begPage() {
 function checkAns() {
     const t = document.getElementById("ans").value.toLowerCase();
     if (!t.split(/\s+/).includes("please")) {
-        document.getElementById("msg").innerText =
-            "not the right answer";
+        document.getElementById("msg").innerText = "not the right answer";
     } else {
         finalPage();
     }
